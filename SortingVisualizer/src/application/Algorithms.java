@@ -10,59 +10,34 @@ import javafx.util.Duration;
 
 public class Algorithms 
 {
-	private static void swap(int[] numArr, int index1, int index2)
-	{
-		int temp = numArr[index1];
-		numArr[index1] = numArr[index2];
-		numArr[index2] = temp;
-	}
+	private static boolean isSorted = false;
 	
-	private static void swap(Rectangle[] rectArr, int index1, int index2)
+	private static void swap(Bar[] bars, int index1, int index2)
 	{
-		Rectangle temp = rectArr[index1];
-		rectArr[index1] = rectArr[index2];
-		rectArr[index2] = temp;
-	}
-	
-	private static void swap(Text[] textArr, int index1, int index2)
-	{
-		Text temp = textArr[index1];
-		textArr[index1] = textArr[index2];
-		textArr[index2] = temp;
+		Bar temp = bars[index1];
+		bars[index1] = bars[index2];
+		bars[index2] = temp;
 	}
 	
 	public static void doBubbleSort(Bar[] bars)
 	{
 		ArrayList<TranslateTransition> animations = new ArrayList<TranslateTransition>();
 		
-		int numArr[] = new int[bars.length];
-		Rectangle rectArr[] = new Rectangle[bars.length];
-		Text textArr[] = new Text[bars.length];
-		
-		for(int i=0; i<bars.length; i++)
-		{
-			numArr[i] = bars[i].getNum();
-			rectArr[i] = bars[i].getRect();
-			textArr[i] = bars[i].getText();
-		}
-		
 		for(int i=0; i<bars.length; i++)
 		{
 			for(int j=1; j<bars.length; j++)
 			{
-				if(numArr[j] < numArr[j-1])
+				if(bars[j].getNum() < bars[j-1].getNum())
 				{
-					swap(numArr, j , j-1);
-					swap(rectArr, j , j-1);
-					swap(textArr, j , j-1);
-					TranslateTransition anim1 = new TranslateTransition(Duration.seconds(0.4f), rectArr[j]);
-					TranslateTransition anim2 = new TranslateTransition(Duration.seconds(0.05f), textArr[j]);
-					TranslateTransition anim3 = new TranslateTransition(Duration.seconds(0.4f), rectArr[j-1]);
-					TranslateTransition anim4 = new TranslateTransition(Duration.seconds(0.05f), textArr[j-1]);
+					swap(bars, j , j-1);
+					TranslateTransition anim1 = new TranslateTransition(Duration.seconds(0.4f), bars[j].getRect());
+					TranslateTransition anim2 = new TranslateTransition(Duration.seconds(0.05f), bars[j].getText());
+					TranslateTransition anim3 = new TranslateTransition(Duration.seconds(0.4f), bars[j-1].getRect());
+					TranslateTransition anim4 = new TranslateTransition(Duration.seconds(0.05f), bars[j-1].getText());
 					
 					double anim1dx = +Bar.width;
 					double anim2dx;
-					if(numArr[j]>10)
+					if(bars[j].getNum()>10)
 					{
 						anim2dx = +Bar.width;
 					}
@@ -72,7 +47,7 @@ public class Algorithms
 					}
 					double anim3dx = -Bar.width;
 					double anim4dx;
-					if(numArr[j-1]>10)
+					if(bars[j-1].getNum()>10)
 					{
 						anim4dx = -Bar.width;
 					}
@@ -96,5 +71,31 @@ public class Algorithms
 		SequentialTransition seq = new SequentialTransition();
 		seq.getChildren().addAll(animations);
 		seq.play();
+		isSorted = true;
+	}
+	
+	public static void doInsertionSort(Bar[] bars)
+	{
+		ArrayList<TranslateTransition> animations = new ArrayList<TranslateTransition>();
+		
+		for(int i=1; i<bars.length; i++)
+		{
+			Bar value = bars[i];
+			int hole  = i;
+			while(hole>0 && bars[hole-1].getNum() > value.getNum())
+			{
+				TranslateTransition anim = new TranslateTransition(Duration.seconds(0.4f), bars[hole].getRect());
+				anim.setByX(Bar.width);
+				animations.add(anim);
+				bars[hole] = bars[hole-1];
+				hole -= 1;
+			}
+			bars[hole] = value;
+		}
+		
+		SequentialTransition seq = new SequentialTransition();
+		seq.getChildren().addAll(animations);
+		seq.play();
+		isSorted = true;
 	}
 }

@@ -81,6 +81,13 @@ public class Start extends Application
 					Algorithms.doBubbleSort(bars);
 				}
 			}
+			if(comboBox.getValue().equals("Insertion Sort"))
+			{
+				if(animStarted)
+				{
+					Algorithms.doInsertionSort(bars);
+				}
+			}
 		});
 		
 		for(int i=0; i<bars.length; i++)
