@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class Algorithms 
@@ -82,20 +80,38 @@ public class Algorithms
 		{
 			Bar value = bars[i];
 			int hole  = i;
+			int ctr = 0;
 			while(hole>0 && bars[hole-1].getNum() > value.getNum())
 			{
-				TranslateTransition anim = new TranslateTransition(Duration.seconds(0.4f), bars[hole].getRect());
-				anim.setByX(Bar.width);
-				animations.add(anim);
+				TranslateTransition anim1 = new TranslateTransition(Duration.seconds(0.4f), bars[hole-1].getRect());
+				TranslateTransition anim2 = new TranslateTransition(Duration.seconds(0.05f), bars[hole-1].getText());
+				anim1.setByX(+Bar.width);
+				anim2.setByX(+Bar.width);
+				animations.add(anim1);
+				animations.add(anim2);
 				bars[hole] = bars[hole-1];
 				hole -= 1;
+				ctr+=1;
 			}
 			bars[hole] = value;
+			for(int j=ctr; j>0; j--)
+			{
+				TranslateTransition anim3 = new TranslateTransition(Duration.seconds(0.4f), bars[hole].getRect());
+				TranslateTransition anim4 = new TranslateTransition(Duration.seconds(0.05f), bars[hole].getText());
+				anim3.setByX(-Bar.width);
+				anim4.setByX(-Bar.width);
+				animations.add(anim3);
+				animations.add(anim4);
+			}
 		}
 		
 		SequentialTransition seq = new SequentialTransition();
 		seq.getChildren().addAll(animations);
 		seq.play();
 		isSorted = true;
+	}
+
+	public static boolean checkIsSorted() {
+		return isSorted;
 	}
 }
