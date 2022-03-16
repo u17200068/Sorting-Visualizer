@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.*;
 
@@ -17,7 +18,6 @@ public class Start extends Application
 	int numberOfRects = 20;
 	final int rectWidth = screenWidth/numberOfRects;
 	static float seconds = 1.0f;
-	boolean animStarted = false;
 
 	public int getRandomNumber(int min, int max) {
 	    return (int) ((Math.random() * (max - min)) + min);
@@ -30,7 +30,9 @@ public class Start extends Application
 		canvas.setStyle("-fx-background-color: black;");
 		Scene scene = new Scene(canvas, screenWidth, screenHeight);
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		Image icon = new Image(getClass().getResourceAsStream("/res/icon.png"));
 		Bar bars[] = new Bar[numberOfRects];
+		Algorithms algo = new Algorithms();
 		for(int i=0; i< numberOfRects; i++)
 		{
 			int randomNum = getRandomNumber(2,45);
@@ -56,9 +58,25 @@ public class Start extends Application
 				+ "-fx-font-weight: bolder;" 
 				+ "-fx-font-size: 26px;");
 		Button start = new Button("Start Visualization");
+		Button shuffle = new Button("Shuffle Numbers");
+		shuffle.setLayoutX(screenWidth/2 - 80);
+		shuffle.setLayoutY(70);
 		start.setLayoutX(screenWidth - 160);
 		start.setLayoutY(15);
 		
+		shuffle.setOnAction(e->{
+			for(int i=0; i<bars.length; i++)
+			{
+				int randomNum = getRandomNumber(2,45);
+				canvas.getChildren().remove(bars[i].getRect());
+				canvas.getChildren().remove(bars[i].getText());
+				bars[i].setNum(randomNum);
+				bars[i].setRect(new Rectangle(), i*rectWidth, screenHeight - randomNum * 10);
+				bars[i].setText(new Text(String.valueOf(randomNum)), screenHeight - randomNum * 10, randomNum * 10);
+				canvas.getChildren().add(bars[i].getRect());
+				canvas.getChildren().add(bars[i].getText());
+			}
+		});
 		
 		for(int i=0; i<bars.length; i++)
 		{
@@ -66,27 +84,13 @@ public class Start extends Application
 		}
 		
 		start.setOnAction(e -> {
-			if(!animStarted)
-			{
-				animStarted = true;
-			}
-			else
-			{
-				animStarted = false;
-			}
 			if(comboBox.getValue().equals("Bubble Sort"))
 			{
-				if(animStarted)
-				{
-					Algorithms.doBubbleSort(bars);
-				}
+				algo.doBubbleSort(bars);
 			}
 			if(comboBox.getValue().equals("Insertion Sort"))
 			{
-				if(animStarted)
-				{
-					Algorithms.doInsertionSort(bars);
-				}
+				algo.doInsertionSort(bars);
 			}
 		});
 		
@@ -98,7 +102,9 @@ public class Start extends Application
 		canvas.getChildren().add(navBar);
 		canvas.getChildren().add(comboBox);
 		canvas.getChildren().add(start);
+		canvas.getChildren().add(shuffle);
 		canvas.getChildren().add(title);
+		stage.getIcons().add(icon);
 		stage.setTitle("Sorting Algorithm Visualizer");
 		stage.setScene(scene);
 		stage.show();

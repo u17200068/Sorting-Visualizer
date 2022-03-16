@@ -52,6 +52,40 @@ public class Bar
 		text.setText(String.valueOf(num));
 	}
 	
+	public void setNum(int num)
+	{
+		this.num = num;
+	}
+	
+	public void setRect(Rectangle rect, int posX, int posY)
+	{
+		this.rect = rect;
+		rect.setX(posX);
+		rect.setY(posY);
+		rect.setWidth(width);
+		rect.setHeight(num * 10);
+		rect.setFill(Color.RED);
+		rect.setStroke(Color.AQUA);
+		rect.setOpacity(0.5f);
+	}
+	
+	public void setText(Text text, int posY, int height)
+	{
+		this.text = text;
+		if(num>10)
+		{
+			text.setX(rect.getX() + 12);
+		}
+		else
+		{
+			text.setX(rect.getX() + 15);
+		}
+		text.setStyle("-fx-font-weight: bolder");
+		text.setY(posY + height - 5);
+		text.setText(String.valueOf(num));
+		text.setFill(Color.GREEN);
+	}
+	
 	public Rectangle getRect()
 	{
 		return rect;

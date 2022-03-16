@@ -2,22 +2,24 @@ package application;
 
 import java.util.ArrayList;
 
+import javafx.animation.FillTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 public class Algorithms 
 {
-	private static boolean isSorted = false;
+	private boolean isSorted;
 	
-	private static void swap(Bar[] bars, int index1, int index2)
+	private void swap(Bar[] bars, int index1, int index2)
 	{
 		Bar temp = bars[index1];
 		bars[index1] = bars[index2];
 		bars[index2] = temp;
 	}
 	
-	public static void doBubbleSort(Bar[] bars)
+	public void doBubbleSort(Bar[] bars)
 	{
 		ArrayList<TranslateTransition> animations = new ArrayList<TranslateTransition>();
 		
@@ -69,10 +71,12 @@ public class Algorithms
 		SequentialTransition seq = new SequentialTransition();
 		seq.getChildren().addAll(animations);
 		seq.play();
-		isSorted = true;
+		seq.setOnFinished(e->{
+			changeBarColor(bars);
+		});
 	}
 	
-	public static void doInsertionSort(Bar[] bars)
+	public void doInsertionSort(Bar[] bars)
 	{
 		ArrayList<TranslateTransition> animations = new ArrayList<TranslateTransition>();
 		
@@ -108,10 +112,34 @@ public class Algorithms
 		SequentialTransition seq = new SequentialTransition();
 		seq.getChildren().addAll(animations);
 		seq.play();
-		isSorted = true;
+		seq.setOnFinished(e->{
+			changeBarColor(bars);
+		});
+	}
+	
+	public void changeBarColor(Bar[] bars)
+	{
+		setSorted(true);
+		ArrayList<FillTransition> animations = new ArrayList<FillTransition>();
+		for(int i=0; i<bars.length; i++)
+		{
+			FillTransition anim = new FillTransition(Duration.seconds(0.4f), bars[i].getRect(), Color.RED, Color.GREEN);
+			FillTransition anim2 = new FillTransition(Duration.seconds(0.05f), bars[i].getText(), Color.GREEN, Color.YELLOW);
+			animations.add(anim);
+			animations.add(anim2);
+		}	
+		SequentialTransition seq = new SequentialTransition();
+		seq.getChildren().addAll(animations);
+		seq.play();
 	}
 
-	public static boolean checkIsSorted() {
+	public boolean getIsSorted() 
+	{
 		return isSorted;
+	}
+
+	private void setSorted(boolean isSorted) 
+	{
+		this.isSorted = isSorted;
 	}
 }
