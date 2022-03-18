@@ -32,7 +32,7 @@ public class Start extends Application
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		Image icon = new Image(getClass().getResourceAsStream("/res/icon.png"));
 		Bar bars[] = new Bar[numberOfRects];
-		Algorithms algo = new Algorithms();
+		Algorithms algo = new Algorithms(4.0f);
 		for(int i=0; i< numberOfRects; i++)
 		{
 			int randomNum = getRandomNumber(2,45);
@@ -46,7 +46,7 @@ public class Start extends Application
 		comboBox.getItems().addAll(
 				"Bubble Sort",
 				"Insertion Sort",
-				"Quick Sort"
+				"Selection Sort"
 				);
 		comboBox.setLayoutX(30);
 		comboBox.setLayoutY(20);
@@ -63,6 +63,21 @@ public class Start extends Application
 		shuffle.setLayoutY(70);
 		start.setLayoutX(screenWidth - 160);
 		start.setLayoutY(15);
+		
+		Button incSpeed = new Button("Increase speed");
+		Button decSpeed = new Button("Decrease speed");
+		incSpeed.setLayoutX(screenWidth/2 + 80);
+		incSpeed.setLayoutY(70);
+		decSpeed.setLayoutX(screenWidth/2 - 230);
+		decSpeed.setLayoutY(70);
+		
+		incSpeed.setOnMouseClicked(e->{
+			algo.increaseSpeed();
+		});
+		
+		decSpeed.setOnMouseClicked(e->{
+			algo.decreaseSpeed();
+		});
 		
 		shuffle.setOnAction(e->{
 			for(int i=0; i<bars.length; i++)
@@ -92,6 +107,10 @@ public class Start extends Application
 			{
 				algo.doInsertionSort(bars);
 			}
+			if(comboBox.getValue().equals("Selection Sort"))
+			{
+				algo.doSelectionSort(bars);
+			}
 		});
 		
 		for(int i=0; i<bars.length; i++)
@@ -104,6 +123,8 @@ public class Start extends Application
 		canvas.getChildren().add(start);
 		canvas.getChildren().add(shuffle);
 		canvas.getChildren().add(title);
+		canvas.getChildren().add(incSpeed);
+		canvas.getChildren().add(decSpeed);
 		stage.getIcons().add(icon);
 		stage.setTitle("Sorting Algorithm Visualizer");
 		stage.setScene(scene);
